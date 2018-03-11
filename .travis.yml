@@ -1,18 +1,14 @@
-sudo: required
 dist: trusty
-language: minimal
+sudo: required
 env:
   matrix:
     - ARCH=x86_64
     - ARCH=armhf
-    - ARCH=aarch64
-    - ARCH=ppc64le
-    - ARCH=s390x
 install:
-  - sudo ./alpine-chroot-install
-script:
-  - /alpine/enter-chroot uname -a
-  - /alpine/enter-chroot env
-  - /alpine/enter-chroot -u $USER env
-  - sudo /alpine/enter-chroot -u $USER env
-  - test "$(/alpine/enter-chroot printf %s! 'Hello, world')" = 'Hello, world!'
+  - sudo .travis/install-alpine
+  - sudo .travis/setup-alpine
+script: |
+  source .travis/common.sh
+  alpine_run $USER .travis/build-pkgs
+notifications:
+  email: false
