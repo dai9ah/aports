@@ -1,0 +1,10 @@
+--- a/hw/xfree86/dixmods/meson.build
++++ b/hw/xfree86/dixmods/meson.build
+@@ -38,6 +38,7 @@
+ 
+     install: true,
+     install_dir: module_dir,
++    install_rpath: '$ORIGIN/./',
+ )
+ 
+ if build_glx
