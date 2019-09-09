@@ -2,23 +2,25 @@
 # Maintainer: Francesco Colista <fcolista@alpinelinux.org>
 pkgname=libuser
 pkgver=0.62
-pkgrel=1
-pkgdesc="A standardized interface for manipulating and administering user and group accounts"
+pkgrel=2
+pkgdesc="A user and group account administration library"
 url="https://pagure.io/libuser"
 arch="all"
-license="LGPL"
+license="LGPL-2.0-or-later"
 depends="python2"
 makedepends="python2-dev glib-dev popt-dev libexecinfo-dev linux-pam-dev
-autoconf automake libtool"
+	autoconf automake libtool"
 subpackages="$pkgname-dev $pkgname-doc $pkgname-lang py2-$pkgname:_py"
-source="https://releases.pagure.org/$pkgname/$pkgname-$pkgver.tar.xz
+source="https://releases.pagure.org/libuser/$pkgname-$pkgver.tar.xz
 	0001-Check-for-issetugid.patch
 	0002-remove-unused-execinfo.h.patch"
-builddir="$srcdir/$pkgname-$pkgver"
+
+prepare() {
+	default_prepare
+	autoreconf -vfi
+}
 
 build() {
-	cd "$builddir"
-	autoreconf -vif
 	./configure \
 		--prefix=/usr \
 		--sysconfdir=/etc \
@@ -26,18 +28,17 @@ build() {
 		--with-python \
 		--disable-gtk-doc-html \
 		--disable-rpath
-		sed -i 's/SUBDIRS = po docs/SUBDIRS = po/' Makefile
-		make || return 1
+	sed -i 's/SUBDIRS = po docs/SUBDIRS = po/' Makefile
+	make
 }
 
 package() {
-	cd "$builddir"
 	make DESTDIR="$pkgdir" install
 }
 
 _py() {
 	cd "$builddir"
-	pkgdesc="Python2 bindings for $pkgname"
+	pkgdesc="Python bindings for $pkgname"
 	depends="$pkgname"
 	mkdir -p "$subpkgdir"/usr/lib
 	mv "$pkgdir""/usr/lib/python2.7" "$subpkgdir"/usr/lib
