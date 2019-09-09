@@ -7,10 +7,10 @@ pkgdesc="A user and group account administration library"
 url="https://pagure.io/libuser"
 arch="all"
 license="LGPL-2.0-or-later"
-depends="python2"
-makedepends="python2-dev glib-dev popt-dev libexecinfo-dev linux-pam-dev
+depends="python3"
+makedepends="python3-dev glib-dev popt-dev libexecinfo-dev linux-pam-dev
 	autoconf automake libtool"
-subpackages="$pkgname-dev $pkgname-doc $pkgname-lang py2-$pkgname:_py"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-lang py3-$pkgname:_py3"
 source="https://releases.pagure.org/libuser/$pkgname-$pkgver.tar.xz
 	0001-Check-for-issetugid.patch
 	0002-remove-unused-execinfo.h.patch"
@@ -36,12 +36,12 @@ package() {
 	make DESTDIR="$pkgdir" install
 }
 
-_py() {
+_py3() {
 	cd "$builddir"
 	pkgdesc="Python bindings for $pkgname"
 	depends="$pkgname"
 	mkdir -p "$subpkgdir"/usr/lib
-	mv "$pkgdir""/usr/lib/python2.7" "$subpkgdir"/usr/lib
+	mv "$pkgdir"/usr/lib/python* "$subpkgdir"/usr/lib
 }
 
 sha512sums="bc2f68456eae5912ac236192e97a3d66d5fa782520eff48d44d391c1ade590e001d821d7a93499e2391d0310cf03f60e4411f045f6ee3301af4e174d9ddc8450  libuser-0.62.tar.xz
